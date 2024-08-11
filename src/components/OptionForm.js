@@ -1,19 +1,13 @@
 import { useState } from 'react';
 
-export default function OptionForm({ questionId, onOptionAdded }) {
-  const [text, setText] = useState('');
+export default function OptionForm({ onAddOption }) {
+  const [newOption, setNewOption] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const res = await fetch(`/api/questions/${questionId}/options`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      setText('');
-      onOptionAdded();
+    if (newOption.trim()) {
+      onAddOption(newOption.trim());
+      setNewOption('');
     }
   };
 
@@ -21,9 +15,9 @@ export default function OptionForm({ questionId, onOptionAdded }) {
     <form onSubmit={handleSubmit}>
       <input
         type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Enter option"
+        value={newOption}
+        onChange={(e) => setNewOption(e.target.value)}
+        placeholder="Enter new option"
         required
       />
       <button type="submit">Add Option</button>
